@@ -1,5 +1,6 @@
 import SwiftUI
 import Charts
+import Foundation
 
 private let tallinnTimeZone = TimeZone(identifier: "Europe/Tallinn")!
 private var dateHourFormatter: DateFormatter {
@@ -24,9 +25,13 @@ private struct AppChartPoint: Identifiable {
 struct ContentView: View {
     @StateObject private var dataStore = PriceDataStore.shared
     @StateObject private var displayPreference = PriceDisplayPreference.shared
+
     @State private var isLoading = false
     @State private var errorMessage: String?
-    
+
+    /// Keep a handle so we can cancel/replace an in-flight fetch when user refreshes again.
+    @State private var fetchTask: Task<Void, Never>?
+
     private var chartPrices: [ElectricityPrice] {
         let now = Date()
         let start = now.addingTimeInterval(-1 * 60 * 60)
@@ -36,7 +41,7 @@ struct ContentView: View {
             return dt >= start && dt <= end
         }
     }
-    
+
     /// All 15-min chart data. xMinutes = position from chart start. currentPoint = closest to now.
     private var chartData: (points: [AppChartPoint], currentPoint: AppChartPoint?, hourLabels: [(x: Double, label: String)]) {
         let calendar = tallinnCalendar
@@ -64,7 +69,7 @@ struct ContentView: View {
 
         return (points, currentPoint, hourLabels)
     }
-    
+
     private var upcomingPrices: [ElectricityPrice] {
         let now = Date()
         return dataStore.prices.filter { price in
@@ -72,7 +77,7 @@ struct ContentView: View {
             return dt >= now
         }
     }
-    
+
     var body: some View {
         NavigationStack {
             Group {
@@ -107,12 +112,18 @@ struct ContentView: View {
                     })
                 }
             }
+            // Pull-to-refresh runs inside a SwiftUI-managed task, which can be cancelled;
+            // our fetch handles cancellation without showing an error.
             .refreshable {
-                await fetchPricesAsync()
+                startFetch(replacingInFlight: true)
+                // Wait for the current task to finish so the refresh control ends correctly.
+                await fetchTask?.value
             }
-            .onAppear {
+            // Use .task instead of .onAppear + spawning a Task to avoid overlapping fetches.
+            .task {
                 if dataStore.prices.isEmpty {
-                    fetchPrices()
+                    startFetch(replacingInFlight: false)
+                    await fetchTask?.value
                 }
             }
         }
@@ -120,11 +131,20 @@ struct ContentView: View {
 }
 
 private extension ContentView {
+    func startFetch(replacingInFlight: Bool) {
+        if replacingInFlight {
+            fetchTask?.cancel()
+        }
+        fetchTask = Task {
+            await fetchPricesAsync()
+        }
+    }
+
     @ViewBuilder
     func loadingView() -> some View {
         ProgressView("Hindu laetakse...")
     }
-    
+
     @ViewBuilder
     func errorView(_ error: String) -> some View {
         VStack(spacing: 12) {
@@ -134,13 +154,13 @@ private extension ContentView {
             Text(error)
                 .foregroundColor(.secondary)
             Button("Proovi uuesti") {
-                fetchPrices()
+                startFetch(replacingInFlight: true)
             }
             .buttonStyle(.borderedProminent)
         }
         .padding()
     }
-    
+
     @ViewBuilder
     func emptyView() -> some View {
         VStack(spacing: 12) {
@@ -149,10 +169,15 @@ private extension ContentView {
                 .foregroundColor(.secondary)
             Text("Hinnad pole saadaval")
                 .foregroundColor(.secondary)
+            Button("Lae hinnad") {
+                startFetch(replacingInFlight: true)
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.top, 8)
         }
         .padding()
     }
-    
+
     @ViewBuilder
     func listView() -> some View {
         List {
@@ -162,7 +187,7 @@ private extension ContentView {
                     Text("Selles vahemikus hindu pole")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        .frame(height: 400)
+                        .frame(height: 256)
                         .frame(maxWidth: .infinity)
                 } else {
                     let style = displayPreference.displayStyle
@@ -174,6 +199,7 @@ private extension ContentView {
                             )
                             .foregroundStyle(.cyan)
                             .interpolationMethod(.catmullRom)
+
                             AreaMark(
                                 x: .value("Min", point.xMinutes),
                                 y: .value(style.label, style.chartValue(point.price))
@@ -187,6 +213,7 @@ private extension ContentView {
                             )
                             .interpolationMethod(.catmullRom)
                         }
+
                         if let nowPoint = data.currentPoint {
                             PointMark(
                                 x: .value("Min", nowPoint.xMinutes),
@@ -221,7 +248,7 @@ private extension ContentView {
                     .padding(.top)
                 }
             }
-            
+
             Section {
                 ForEach(upcomingPrices) { price in
                     HStack {
@@ -242,7 +269,7 @@ private extension ContentView {
                     .padding(.vertical, 4)
                 }
             }
-            
+
             if let lastUpdate = dataStore.lastUpdate {
                 Section {
                     HStack {
@@ -256,23 +283,29 @@ private extension ContentView {
             }
         }
     }
-}
 
-private extension ContentView {
-    func fetchPrices() {
-        Task {
-            await fetchPricesAsync()
-        }
-    }
-    
     func fetchPricesAsync() async {
-        isLoading = true
-        errorMessage = nil
-        
+        await MainActor.run {
+            isLoading = true
+            errorMessage = nil
+        }
+
         do {
             let prices = try await ElectricityPriceService.shared.fetchPrices()
+            try Task.checkCancellation()
+
             await MainActor.run {
                 dataStore.savePrices(prices)
+                isLoading = false
+                print("Fetch done")
+            }
+        } catch is CancellationError {
+            await MainActor.run {
+                isLoading = false
+            }
+        } catch let urlError as URLError where urlError.code == .cancelled {
+            // Some APIs surface cancellation this way.
+            await MainActor.run {
                 isLoading = false
             }
         } catch {
