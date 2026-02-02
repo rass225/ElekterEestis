@@ -154,7 +154,20 @@ struct ElectricityWidgetData {
             return String(format: "%.0f s/kWh", price)
         }
     }
-    
+
+    /// Value part only (e.g. "0.21" or "21").
+    static func formatPriceValue(_ price: Double, style: PriceDisplayStyle) -> String {
+        switch style {
+        case .euroPerKwh: return String(format: "%.2f", price / 100.0)
+        case .centsPerKwh: return String(format: "%.0f", price)
+        }
+    }
+
+    /// Unit/type part only (e.g. "€/kWh" or "s/kWh").
+    static func formatPriceUnit(_ style: PriceDisplayStyle) -> String {
+        style == .euroPerKwh ? "€/kWh" : "s/kWh"
+    }
+
     // MARK: - Preferences
     
     private static let appGroupIdentifier = "group.tauts.ElekterEestis"

@@ -13,15 +13,19 @@ struct LockScreenRectangularView: View {
     }
 
     var body: some View {
-        let result = entry.data.chartPointsWithAllData(hoursBefore: 1, hoursAfter: 8)
-        VStack(alignment: .leading, spacing: 4) {
+        let result = entry.data.chartPointsWithAllData(hoursBefore: 0, hoursAfter: 6)
+        HStack(alignment: .center, spacing: 6) {
             if let current = entry.data.currentPrice {
-                HStack {
-                    Text(ElectricityWidgetData.formatPrice(current.price, style: displayStyle))
+                VStack(alignment: .center, spacing: 0) {
+                    Text(ElectricityWidgetData.formatPriceValue(current.price, style: displayStyle))
                         .font(.system(.caption, design: .rounded))
                         .fontWeight(.semibold)
-                    Spacer()
+                    Text(ElectricityWidgetData.formatPriceUnit(displayStyle))
+                        .font(.system(size: 9))
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
                 }
+                .padding(.bottom, 8)
             }
             if result.points.isEmpty {
                 Text("Hindu pole")
@@ -71,6 +75,7 @@ struct LockScreenRectangularView: View {
                             AxisValueLabel {
                                 Text(label)
                                     .font(.system(size: 8))
+                                    .lineLimit(1)
                                     .offset(x: -8)
                             }
                         }
@@ -93,9 +98,9 @@ struct LockScreenRectangularView: View {
                 }
             }
         }
-        .padding(.top, 4)
-        .padding(.leading, 4)
+        .padding(.top, 8)
+        .padding(.leading, 7)
         .padding(.trailing, 0.5)
-        .background(.ultraThinMaterial, in: .rect(cornerRadius: 8, style: .continuous))
+        .background(.ultraThickMaterial, in: .rect(cornerRadius: 20, style: .continuous))
     }
 }
