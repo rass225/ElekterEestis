@@ -1,8 +1,8 @@
 import Foundation
 
 enum WidgetPriceLoader {
-    private static let appGroupIdentifier = "group.tauts.ElekterEestis"
-    private static let pricesKey = "electricityPrices"
+    private static let appGroupIdentifier = SharedConstants.appGroupIdentifier
+    private static let pricesKey = SharedConstants.pricesKey
 
     /// Loads prices for home screen widgets: 3h before now, up to 10h onwards.
     /// If less than 10h of future data is available, returns whatever exists.

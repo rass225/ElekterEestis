@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E001E0012F2E9AC50076E111 /* ElekterEestis Widget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E001E0022F2E9AC50076E111 /* ElekterEestis Widget.appex */; };
+		C0CE300C2F30000100AC3BB5 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0CE300B2F30000100AC3BB5 /* XCTest.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -17,6 +18,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = E001E0082F2E9AC50076E111;
 			remoteInfo = "ElekterEestis Widget";
+		};
+		C0CE300A2F30000100AC3BB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E001E0042F2E9AC30076E111 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E001E0052F2E9AC30076E111;
+			remoteInfo = ElekterEestis;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -37,6 +45,8 @@
 /* Begin PBXFileReference section */
 		E001E0022F2E9AC50076E111 /* ElekterEestis Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ElekterEestis Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E001E00A2F2E9AC30076E111 /* ElekterEestis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ElekterEestis.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0CE30022F30000100AC3BB5 /* ElekterEestisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ElekterEestisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0CE300B2F30000100AC3BB5 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -44,6 +54,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Models/ElectricityPrice.swift,
+				Shared/PriceDisplayStyle.swift,
+				Shared/SharedConstants.swift,
 			);
 			target = E001E0082F2E9AC50076E111 /* ElekterEestis Widget */;
 		};
@@ -71,6 +83,16 @@
 			path = "ElekterEestis Widget";
 			sourceTree = "<group>";
 		};
+		C0CE30002F30000100AC3BB5 /* ElekterEestisTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ElekterEestisTests;
+			sourceTree = "<group>";
+		};
+		C0CE300E2F30000100AC3BB5 /* ElekterEestis/Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ElekterEestis/Shared;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,27 +110,46 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0CE30042F30000100AC3BB5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0CE300C2F30000100AC3BB5 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E001E0142F2E9AC30076E111 = {
-			isa = PBXGroup;
-			children = (
-				E001E00E2F2E9AC30076E111 /* ElekterEestis */,
-				E001E00F2F2E9AC50076E111 /* ElekterEestis Widget */,
-				E001E0152F2E9AC30076E111 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		E001E0152F2E9AC30076E111 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E001E00A2F2E9AC30076E111 /* ElekterEestis.app */,
-				E001E0022F2E9AC50076E111 /* ElekterEestis Widget.appex */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
+	E001E0142F2E9AC30076E111 = {
+		isa = PBXGroup;
+		children = (
+			E001E00E2F2E9AC30076E111 /* ElekterEestis */,
+			E001E00F2F2E9AC50076E111 /* ElekterEestis Widget */,
+			C0CE30002F30000100AC3BB5 /* ElekterEestisTests */,
+			C0CE300D2F30000100AC3BB5 /* Frameworks */,
+			E001E0152F2E9AC30076E111 /* Products */,
+		);
+		sourceTree = "<group>";
+	};
+	E001E0152F2E9AC30076E111 /* Products */ = {
+		isa = PBXGroup;
+		children = (
+			E001E00A2F2E9AC30076E111 /* ElekterEestis.app */,
+			E001E0022F2E9AC50076E111 /* ElekterEestis Widget.appex */,
+			C0CE30022F30000100AC3BB5 /* ElekterEestisTests.xctest */,
+		);
+		name = Products;
+		sourceTree = "<group>";
+	};
+	C0CE300D2F30000100AC3BB5 /* Frameworks */ = {
+		isa = PBXGroup;
+		children = (
+			C0CE300B2F30000100AC3BB5 /* XCTest.framework */,
+		);
+		name = Frameworks;
+		sourceTree = "<group>";
+	};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -136,28 +177,52 @@
 			productReference = E001E00A2F2E9AC30076E111 /* ElekterEestis.app */;
 			productType = "com.apple.product-type.application";
 		};
-		E001E0082F2E9AC50076E111 /* ElekterEestis Widget */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E001E0242F2E9AC50076E111 /* Build configuration list for PBXNativeTarget "ElekterEestis Widget" */;
-			buildPhases = (
-				E001E0252F2E9AC50076E111 /* Sources */,
-				E001E0132F2E9AC50076E111 /* Frameworks */,
-				E001E0262F2E9AC50076E111 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				E001E00F2F2E9AC50076E111 /* ElekterEestis Widget */,
-			);
-			name = "ElekterEestis Widget";
-			packageProductDependencies = (
-			);
-			productName = "ElekterEestis Widget";
-			productReference = E001E0022F2E9AC50076E111 /* ElekterEestis Widget.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
+	E001E0082F2E9AC50076E111 /* ElekterEestis Widget */ = {
+		isa = PBXNativeTarget;
+		buildConfigurationList = E001E0242F2E9AC50076E111 /* Build configuration list for PBXNativeTarget "ElekterEestis Widget" */;
+		buildPhases = (
+			E001E0252F2E9AC50076E111 /* Sources */,
+			E001E0132F2E9AC50076E111 /* Frameworks */,
+			E001E0262F2E9AC50076E111 /* Resources */,
+		);
+		buildRules = (
+		);
+		dependencies = (
+		);
+		fileSystemSynchronizedGroups = (
+			E001E00F2F2E9AC50076E111 /* ElekterEestis Widget */,
+			C0CE300E2F30000100AC3BB5 /* ElekterEestis/Shared */,
+		);
+		name = "ElekterEestis Widget";
+		packageProductDependencies = (
+		);
+		productName = "ElekterEestis Widget";
+		productReference = E001E0022F2E9AC50076E111 /* ElekterEestis Widget.appex */;
+		productType = "com.apple.product-type.app-extension";
+	};
+	C0CE30012F30000100AC3BB5 /* ElekterEestisTests */ = {
+		isa = PBXNativeTarget;
+		buildConfigurationList = C0CE30062F30000100AC3BB5 /* Build configuration list for PBXNativeTarget "ElekterEestisTests" */;
+		buildPhases = (
+			C0CE30032F30000100AC3BB5 /* Sources */,
+			C0CE30042F30000100AC3BB5 /* Frameworks */,
+			C0CE30052F30000100AC3BB5 /* Resources */,
+		);
+		buildRules = (
+		);
+		dependencies = (
+			C0CE30092F30000100AC3BB5 /* PBXTargetDependency */,
+		);
+		fileSystemSynchronizedGroups = (
+			C0CE30002F30000100AC3BB5 /* ElekterEestisTests */,
+		);
+		name = ElekterEestisTests;
+		packageProductDependencies = (
+		);
+		productName = ElekterEestisTests;
+		productReference = C0CE30022F30000100AC3BB5 /* ElekterEestisTests.xctest */;
+		productType = "com.apple.product-type.bundle.unit-test";
+	};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -172,6 +237,9 @@
 						CreatedOnToolsVersion = 26.0.1;
 					};
 					E001E0082F2E9AC50076E111 = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					C0CE30012F30000100AC3BB5 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
@@ -189,11 +257,12 @@
 			productRefGroup = E001E0152F2E9AC30076E111 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			targets = (
-				E001E0052F2E9AC30076E111 /* ElekterEestis */,
-				E001E0082F2E9AC50076E111 /* ElekterEestis Widget */,
-			);
-		};
+		targets = (
+			E001E0052F2E9AC30076E111 /* ElekterEestis */,
+			E001E0082F2E9AC50076E111 /* ElekterEestis Widget */,
+			C0CE30012F30000100AC3BB5 /* ElekterEestisTests */,
+		);
+	};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -205,6 +274,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E001E0262F2E9AC50076E111 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0CE30052F30000100AC3BB5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -228,6 +304,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0CE30032F30000100AC3BB5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -235,6 +318,11 @@
 			isa = PBXTargetDependency;
 			target = E001E0082F2E9AC50076E111 /* ElekterEestis Widget */;
 			targetProxy = E001E0072F2E9AC50076E111 /* PBXContainerItemProxy */;
+		};
+		C0CE30092F30000100AC3BB5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E001E0052F2E9AC30076E111 /* ElekterEestis */;
+			targetProxy = C0CE300A2F30000100AC3BB5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -478,6 +566,54 @@
 			};
 			name = Release;
 		};
+		C0CE30072F30000100AC3BB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q6B2DLVPJB;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ElekterEestisTests;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = tauts.ElekterEestisTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ElekterEestis.app/ElekterEestis";
+			};
+			name = Debug;
+		};
+		C0CE30082F30000100AC3BB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q6B2DLVPJB;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ElekterEestisTests;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = tauts.ElekterEestisTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ElekterEestis.app/ElekterEestis";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -495,6 +631,15 @@
 			buildConfigurations = (
 				E001E0302F2E9AC50076E111 /* Debug */,
 				E001E0312F2E9AC50076E111 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0CE30062F30000100AC3BB5 /* Build configuration list for PBXNativeTarget "ElekterEestisTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0CE30072F30000100AC3BB5 /* Debug */,
+				C0CE30082F30000100AC3BB5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

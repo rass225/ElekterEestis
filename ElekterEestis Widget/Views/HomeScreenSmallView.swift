@@ -24,7 +24,7 @@ struct HomeScreenSmallView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let current = entry.data.currentPrice {
-                Text(ElectricityWidgetData.formatPrice(current.price, style: displayStyle))
+                Text(displayStyle.formatPrice(current.price))
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .padding(.bottom, 8)

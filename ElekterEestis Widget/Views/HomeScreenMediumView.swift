@@ -26,7 +26,7 @@ struct HomeScreenMediumView: View {
                 Spacer()
 
                 if let current = entry.data.currentPrice {
-                    Text(ElectricityWidgetData.formatPrice(current.price, style: displayStyle))
+                    Text(displayStyle.formatPrice(current.price))
                         .font(.subheadline)
                         .fontWeight(.semibold)
                 }

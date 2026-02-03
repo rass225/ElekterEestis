@@ -15,9 +15,11 @@ enum BackgroundRefreshRunner {
             }
 
             SharedFetchFlag.markFetchedNow()
+            SharedFetchFlag.markRefreshStatus(success: true)
 
             task.setTaskCompleted(success: true)
         } catch {
+            SharedFetchFlag.markRefreshStatus(success: false, errorDescription: error.localizedDescription)
             task.setTaskCompleted(success: false)
         }
 

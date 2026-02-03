@@ -2,18 +2,25 @@ import SwiftUI
 import Charts
 import Foundation
 
-private let tallinnTimeZone = TimeZone(identifier: "Europe/Tallinn")!
-private var dateHourFormatter: DateFormatter {
+private let tallinnTimeZone = TimeZone(identifier: SharedConstants.tallinnTimeZoneId)!
+private let dateHourFormatter: DateFormatter = {
     let f = DateFormatter()
     f.dateFormat = "HH"
     f.timeZone = tallinnTimeZone
     return f
-}
+}()
 private var tallinnCalendar: Calendar {
     var cal = Calendar.current
     cal.timeZone = tallinnTimeZone
     return cal
 }
+private let staleThresholdSeconds: TimeInterval = 3 * 60 * 60
+private let absoluteDateFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.dateFormat = "yyyy-MM-dd HH:mm"
+    f.timeZone = tallinnTimeZone
+    return f
+}()
 
 private struct AppChartPoint: Identifiable {
     let id: String
@@ -53,7 +60,7 @@ struct ContentView: View {
         let inRange = chartPrices.compactMap { p -> (date: Date, price: Double)? in
             guard let dt = p.dateTime else { return nil }
             return dt >= startHour && dt <= endHour ? (dt, p.price) : nil
-        }.sorted { $0.date < $1.date }
+        }
 
         let points = inRange.enumerated().map { index, item in
             let xMinutes = item.date.timeIntervalSince(startHour) / 60.0
@@ -78,13 +85,22 @@ struct ContentView: View {
         }
     }
 
+    private var isStale: Bool {
+        guard let last = dataStore.lastUpdate else { return true }
+        return Date().timeIntervalSince(last) > staleThresholdSeconds
+    }
+
     var body: some View {
         NavigationStack {
             Group {
                 if isLoading {
                     loadingView()
                 } else if let error = errorMessage {
-                    errorView(error)
+                    if dataStore.prices.isEmpty {
+                        errorView(error)
+                    } else {
+                        listView()
+                    }
                 } else {
                     if dataStore.prices.isEmpty {
                         emptyView()
@@ -121,7 +137,7 @@ struct ContentView: View {
             }
             // Use .task instead of .onAppear + spawning a Task to avoid overlapping fetches.
             .task {
-                if dataStore.prices.isEmpty {
+                if dataStore.prices.isEmpty || isStale {
                     startFetch(replacingInFlight: false)
                     await fetchTask?.value
                 }
@@ -181,6 +197,30 @@ private extension ContentView {
     @ViewBuilder
     func listView() -> some View {
         List {
+            if let error = errorMessage {
+                Section {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .foregroundColor(.orange)
+                        Text("Uuendamine ebaõnnestus. Kuvan viimased salvestatud hinnad.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+
+            if isStale {
+                Section {
+                    HStack(spacing: 8) {
+                        Image(systemName: "clock.badge.exclamationmark")
+                            .foregroundColor(.orange)
+                        Text("Andmed võivad olla aegunud.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+
             Section {
                 let data = chartData
                 if data.points.isEmpty {
@@ -275,7 +315,7 @@ private extension ContentView {
                     HStack {
                         Text("Viimati uuendatud")
                         Spacer()
-                        Text(lastUpdate, style: .relative)
+                        Text(absoluteDateFormatter.string(from: lastUpdate))
                             .foregroundColor(.secondary)
                     }
                     .font(.caption)

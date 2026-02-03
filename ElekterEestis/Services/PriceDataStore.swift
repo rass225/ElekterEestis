@@ -12,9 +12,9 @@ import WidgetKit
 class PriceDataStore: ObservableObject {
     static let shared = PriceDataStore()
     
-    private let appGroupIdentifier = "group.tauts.ElekterEestis"
-    private let pricesKey = "electricityPrices"
-    private let lastUpdateKey = "lastUpdate"
+    private let appGroupIdentifier = SharedConstants.appGroupIdentifier
+    private let pricesKey = SharedConstants.pricesKey
+    private let lastUpdateKey = SharedConstants.lastUpdateKey
     
     @Published var prices: [ElectricityPrice] = []
     @Published var nextThreeHours: [ElectricityPrice] = []

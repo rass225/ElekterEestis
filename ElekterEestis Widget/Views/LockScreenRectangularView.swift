@@ -17,10 +17,10 @@ struct LockScreenRectangularView: View {
         HStack(alignment: .center, spacing: 6) {
             if let current = entry.data.currentPrice {
                 VStack(alignment: .center, spacing: 0) {
-                    Text(ElectricityWidgetData.formatPriceValue(current.price, style: displayStyle))
+                    Text(displayStyle.formatPriceValue(current.price))
                         .font(.system(.caption, design: .rounded))
                         .fontWeight(.semibold)
-                    Text(ElectricityWidgetData.formatPriceUnit(displayStyle))
+                    Text(displayStyle.formatPriceUnit)
                         .font(.system(size: 9))
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)

@@ -8,7 +8,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     ) -> Bool {
 
         BGTaskScheduler.shared.register(
-            forTaskWithIdentifier: "tauts.ElekterEestis.refresh",
+            forTaskWithIdentifier: SharedConstants.bgRefreshTaskId,
             using: nil
         ) { task in
             let task = task as! BGAppRefreshTask

@@ -8,11 +8,6 @@ struct HourlyPricePoint: Identifiable {
     let price: Double
 }
 
-enum PriceDisplayStyle {
-    case euroPerKwh   // "%.2f €/kWh"
-    case centsPerKwh  // "%.0f cents/kWh"
-}
-
 // MARK: - Centralized widget data hub
 
 /// Single source of truth for all derived electricity widget data.
@@ -124,7 +119,7 @@ struct ElectricityWidgetData {
 
     // MARK: - Formatting (single place, fixes HH:MM → HH:mm)
 
-    private static let tallinnTimeZone = TimeZone(identifier: "Europe/Tallinn")!
+    private static let tallinnTimeZone = TimeZone(identifier: SharedConstants.tallinnTimeZoneId)!
 
     private static var tallinnCalendar: Calendar {
         var cal = Calendar.current
@@ -146,32 +141,10 @@ struct ElectricityWidgetData {
         return formatter.string(from: date)
     }
 
-    static func formatPrice(_ price: Double, style: PriceDisplayStyle) -> String {
-        switch style {
-        case .euroPerKwh:
-            return String(format: "%.2f €/kWh", price / 100.0)
-        case .centsPerKwh:
-            return String(format: "%.0f s/kWh", price)
-        }
-    }
-
-    /// Value part only (e.g. "0.21" or "21").
-    static func formatPriceValue(_ price: Double, style: PriceDisplayStyle) -> String {
-        switch style {
-        case .euroPerKwh: return String(format: "%.2f", price / 100.0)
-        case .centsPerKwh: return String(format: "%.0f", price)
-        }
-    }
-
-    /// Unit/type part only (e.g. "€/kWh" or "s/kWh").
-    static func formatPriceUnit(_ style: PriceDisplayStyle) -> String {
-        style == .euroPerKwh ? "€/kWh" : "s/kWh"
-    }
-
     // MARK: - Preferences
     
-    private static let appGroupIdentifier = "group.tauts.ElekterEestis"
-    private static let preferenceKeyPrefix = "widgetPriceDisplayStyle_"
+    private static let appGroupIdentifier = SharedConstants.appGroupIdentifier
+    private static let preferenceKeyPrefix = SharedConstants.widgetPreferenceKeyPrefix
     
     /// Get the price display style preference for a widget family
     static func getDisplayStyle(for widgetFamily: String, defaultStyle: PriceDisplayStyle = .euroPerKwh) -> PriceDisplayStyle {
@@ -187,23 +160,6 @@ struct ElectricityWidgetData {
     static func setDisplayStyle(_ style: PriceDisplayStyle, for widgetFamily: String) {
         guard let defaults = UserDefaults(suiteName: appGroupIdentifier) else { return }
         defaults.set(style.rawValue, forKey: preferenceKeyPrefix + widgetFamily)
-    }
-}
-
-extension PriceDisplayStyle {
-    var rawValue: String {
-        switch self {
-        case .euroPerKwh: return "euroPerKwh"
-        case .centsPerKwh: return "centiPerKwh"
-        }
-    }
-    
-    init?(rawValue: String) {
-        switch rawValue {
-        case "euroPerKwh": self = .euroPerKwh
-        case "centiPerKwh": self = .centsPerKwh
-        default: return nil
-        }
     }
 }
 

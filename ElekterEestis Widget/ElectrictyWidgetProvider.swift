@@ -16,7 +16,7 @@ struct ElectricityWidgetProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<ElectricityWidgetEntry>) -> Void) {
         let prices = WidgetPriceLoader.loadNextHoursPrices()
         var calendar = Calendar.current
-        calendar.timeZone = TimeZone(identifier: "Europe/Tallinn")!
+        calendar.timeZone = TimeZone(identifier: SharedConstants.tallinnTimeZoneId)!
         let now = Date()
         // Round down to nearest 15 min so "current" marker stays accurate when widget is displayed
         let comps = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: now)
