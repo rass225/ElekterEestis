@@ -86,7 +86,7 @@ struct LockScreenRectangularView: View {
                         AxisValueLabel {
                             if let p = value.as(Double.self) {
                                 if displayStyle == .euroPerKwh {
-                                    Text(String(format: "%.1f", p))
+                                    Text(String(format: "%.2f", p))
                                         .font(.system(size: 8))
                                 } else {
                                     Text("\(Int(p))")
